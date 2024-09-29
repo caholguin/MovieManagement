@@ -1,15 +1,14 @@
 package net.projects.MovieManagement.controller;
 
 import jakarta.validation.Valid;
+import net.projects.MovieManagement.dto.request.MovieSearchCriteriaDTO;
 import net.projects.MovieManagement.dto.request.SaveMovieDTO;
 import net.projects.MovieManagement.dto.response.GetMovieDTO;
-import net.projects.MovieManagement.exception.ObjectoNotFoundException;
 import net.projects.MovieManagement.service.MovieService;
 import net.projects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -21,19 +20,15 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<List<GetMovieDTO>> findAll(@RequestParam(required = false) String title, @RequestParam(required = false) MovieGenre genre){
+    public ResponseEntity<List<GetMovieDTO>> findAll(@RequestParam(required = false) String title,
+                                                     @RequestParam(required = false) MovieGenre genre,
+                                                     @RequestParam(required = false, name = "min_release_year") Integer minReleaseYear,
+                                                     @RequestParam(required = false, name = "max_release_year") Integer maxReleaseYear,
+                                                     @RequestParam(required = false, name = "min_average_rating") Integer minAverageRating){
 
-        List<GetMovieDTO> movies = null;
+        MovieSearchCriteriaDTO searchCriteriaDTO = new MovieSearchCriteriaDTO(title,genre,minReleaseYear,maxReleaseYear,minAverageRating);
 
-        if(StringUtils.hasText(title) && genre != null){
-            movies = movieService.findAllByGenreAndTitle(genre, title);
-        }else if(StringUtils.hasText(title)){
-            movies = movieService.findAllByTitle(title);
-        }else if(genre != null){
-            movies = movieService.findAllByGenre(genre);
-        }else {
-            movies = movieService.findAll();
-        }
+        List<GetMovieDTO> movies = movieService.findAll(searchCriteriaDTO);
 
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }

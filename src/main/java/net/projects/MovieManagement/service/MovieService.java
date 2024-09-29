@@ -1,5 +1,6 @@
 package net.projects.MovieManagement.service;
 
+import net.projects.MovieManagement.dto.request.MovieSearchCriteriaDTO;
 import net.projects.MovieManagement.dto.request.SaveMovieDTO;
 import net.projects.MovieManagement.dto.response.GetMovieDTO;
 import net.projects.MovieManagement.entity.Movie;
@@ -9,13 +10,7 @@ import java.util.List;
 
 public interface MovieService {
 
-    List<GetMovieDTO> findAll();
-
-    List<GetMovieDTO> findAllByTitle(String title);
-
-    List<GetMovieDTO> findAllByGenre(MovieGenre genre);
-
-    List<GetMovieDTO> findAllByGenreAndTitle(MovieGenre genre, String title);
+    List<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria);
 
     GetMovieDTO findOneById(Long id);
 
@@ -26,5 +21,10 @@ public interface MovieService {
     void deleteOneById(Long id);
 
 
+   /* List<GetMovieDTO> findAllByTitle(String title);
+
+    List<GetMovieDTO> findAllByGenre(MovieGenre genre);
+
+    List<GetMovieDTO> findAllByGenreAndTitle(MovieGenre genre, String title);*/
 
 }

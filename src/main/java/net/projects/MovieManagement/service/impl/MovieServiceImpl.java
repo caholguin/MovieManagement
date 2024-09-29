@@ -1,11 +1,13 @@
 package net.projects.MovieManagement.service.impl;
 
+import net.projects.MovieManagement.dto.request.MovieSearchCriteriaDTO;
 import net.projects.MovieManagement.dto.request.SaveMovieDTO;
 import net.projects.MovieManagement.dto.response.GetMovieDTO;
 import net.projects.MovieManagement.entity.Movie;
 import net.projects.MovieManagement.exception.ObjectoNotFoundException;
 import net.projects.MovieManagement.mapper.MovieMapper;
 import net.projects.MovieManagement.repository.MovieRespository;
+import net.projects.MovieManagement.repository.specification.FindAllMovieEspecification;
 import net.projects.MovieManagement.service.MovieService;
 import net.projects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,28 +25,14 @@ public class MovieServiceImpl implements MovieService {
     private MovieRespository movieRespository;
 
     @Override
-    public List<GetMovieDTO> findAll(){
-        List<Movie> movies = movieRespository.findAll();
+    public List<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria){
+
+        FindAllMovieEspecification movieSpecification = new FindAllMovieEspecification(searchCriteria);
+
+        List<Movie> movies = movieRespository.findAll(movieSpecification);
         return MovieMapper.toDtoList(movies);
     }
 
-    @Override
-    public List<GetMovieDTO> findAllByTitle(String title){
-        List<Movie> movies = movieRespository.findByTitleContaining(title);
-        return MovieMapper.toDtoList(movies);
-    }
-
-    @Override
-    public List<GetMovieDTO> findAllByGenre(MovieGenre genre){
-        List<Movie> movies =  movieRespository.findByGenre(genre);
-        return MovieMapper.toDtoList(movies);
-    }
-
-    @Override
-    public List<GetMovieDTO> findAllByGenreAndTitle(MovieGenre genre, String title){
-        List<Movie> movies =  movieRespository.findByGenreAndTitleContaining(genre, title);
-        return MovieMapper.toDtoList(movies);
-    }
 
     @Override
     public GetMovieDTO createOne(SaveMovieDTO saveMovieDTO){

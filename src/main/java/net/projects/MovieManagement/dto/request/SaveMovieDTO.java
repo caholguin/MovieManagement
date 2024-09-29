@@ -1,13 +1,10 @@
 package net.projects.MovieManagement.dto.request;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import net.projects.MovieManagement.util.MovieGenre;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 public class SaveMovieDTO implements Serializable {
 
