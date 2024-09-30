@@ -7,6 +7,10 @@ import net.projects.MovieManagement.dto.response.GetMovieDTO;
 import net.projects.MovieManagement.service.MovieService;
 import net.projects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +24,18 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<List<GetMovieDTO>> findAll(@RequestParam(required = false) String title,
+    public ResponseEntity<Page<GetMovieDTO>> findAll(@RequestParam(required = false) String title,
                                                      @RequestParam(required = false) MovieGenre genre,
                                                      @RequestParam(required = false, name = "min_release_year") Integer minReleaseYear,
                                                      @RequestParam(required = false, name = "max_release_year") Integer maxReleaseYear,
-                                                     @RequestParam(required = false, name = "min_average_rating") Integer minAverageRating){
+                                                     @RequestParam(required = false, name = "min_average_rating") Integer minAverageRating,
+                                                     Pageable pageable){
+
+
 
         MovieSearchCriteriaDTO searchCriteriaDTO = new MovieSearchCriteriaDTO(title,genre,minReleaseYear,maxReleaseYear,minAverageRating);
 
-        List<GetMovieDTO> movies = movieService.findAll(searchCriteriaDTO);
+        Page<GetMovieDTO> movies = movieService.findAll(searchCriteriaDTO, pageable);
 
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }

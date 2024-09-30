@@ -2,15 +2,12 @@ package net.projects.MovieManagement.service;
 
 import net.projects.MovieManagement.dto.request.SaveUserDTO;
 import net.projects.MovieManagement.dto.response.GetUserDTO;
-import net.projects.MovieManagement.entity.User;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
-    List<GetUserDTO> findAll();
-
-    List<GetUserDTO> findAllByName(String name);
+    Page<GetUserDTO> findAll(String name, Pageable pageable);
 
     GetUserDTO findOneByUsername(String username);
 
@@ -19,5 +16,4 @@ public interface UserService {
     GetUserDTO updateOneByUsername(String username, SaveUserDTO saveUserDTO);
 
     void deleteOneByUsername(String username);
-
 }

@@ -1,5 +1,6 @@
 package net.projects.MovieManagement.service.impl;
 
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import net.projects.MovieManagement.dto.request.SaveUserDTO;
 import net.projects.MovieManagement.dto.response.GetUserDTO;
@@ -10,11 +11,11 @@ import net.projects.MovieManagement.repository.UserRepository;
 import net.projects.MovieManagement.service.UserService;
 import net.projects.MovieManagement.service.validator.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,15 +24,18 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<GetUserDTO> findAll(){
-        List<User> users = userRepository.findAll();
-        return UserMapper.toDtoList(users);
-    }
+    public Page<GetUserDTO> findAll(String name, Pageable pageable){
 
-    @Override
-    public List<GetUserDTO> findAllByName(String name){
-        List<User> users = userRepository.findByNameContaining(name);
-        return UserMapper.toDtoList(users);
+        Specification<User> userSpecification = (root, query, builder) -> {
+            if (StringUtils.hasText(name)){
+                Predicate nameLike = builder.like(root.get("name"), "%" + name + "%");
+                return nameLike;
+            }
+            return null;
+        };
+
+        Page<User> users = userRepository.findAll(userSpecification,pageable);
+        return users.map(UserMapper::toDto);
     }
 
     @Override

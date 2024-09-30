@@ -5,12 +5,12 @@ import net.projects.MovieManagement.dto.request.SaveUserDTO;
 import net.projects.MovieManagement.dto.response.GetUserDTO;
 import net.projects.MovieManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -20,15 +20,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<GetUserDTO>> getAllUsers(@RequestParam(required = false) String name) {
+    public ResponseEntity<Page<GetUserDTO>> getAll(@RequestParam(required = false) String name, Pageable pageable){
 
-        List<GetUserDTO> users = null;
-
-        if(StringUtils.hasText(name)) {
-            users = userService.findAllByName(name);
-        }else{
-            users = userService.findAll();
-        }
+        Page<GetUserDTO> users = userService.findAll(name, pageable);
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

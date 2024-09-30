@@ -9,14 +9,13 @@ import net.projects.MovieManagement.mapper.MovieMapper;
 import net.projects.MovieManagement.repository.MovieRespository;
 import net.projects.MovieManagement.repository.specification.FindAllMovieEspecification;
 import net.projects.MovieManagement.service.MovieService;
-import net.projects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -25,12 +24,15 @@ public class MovieServiceImpl implements MovieService {
     private MovieRespository movieRespository;
 
     @Override
-    public List<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria){
+    public Page<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria, Pageable pageable){
 
         FindAllMovieEspecification movieSpecification = new FindAllMovieEspecification(searchCriteria);
 
-        List<Movie> movies = movieRespository.findAll(movieSpecification);
-        return MovieMapper.toDtoList(movies);
+        Page<Movie> movies = movieRespository.findAll(movieSpecification,pageable);
+
+        return movies.map(MovieMapper::toDto);
+
+        //return MovieMapper.toDtoList(movies);
     }
 
 

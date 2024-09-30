@@ -3,14 +3,15 @@ package net.projects.MovieManagement.service;
 import net.projects.MovieManagement.dto.request.MovieSearchCriteriaDTO;
 import net.projects.MovieManagement.dto.request.SaveMovieDTO;
 import net.projects.MovieManagement.dto.response.GetMovieDTO;
-import net.projects.MovieManagement.entity.Movie;
-import net.projects.MovieManagement.util.MovieGenre;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 
 public interface MovieService {
 
-    List<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria);
+    Page<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria, Pageable pageable);
 
     GetMovieDTO findOneById(Long id);
 
@@ -19,12 +20,5 @@ public interface MovieService {
     GetMovieDTO updateOneById(Long id, SaveMovieDTO saveMovieDTO);
 
     void deleteOneById(Long id);
-
-
-   /* List<GetMovieDTO> findAllByTitle(String title);
-
-    List<GetMovieDTO> findAllByGenre(MovieGenre genre);
-
-    List<GetMovieDTO> findAllByGenreAndTitle(MovieGenre genre, String title);*/
 
 }
