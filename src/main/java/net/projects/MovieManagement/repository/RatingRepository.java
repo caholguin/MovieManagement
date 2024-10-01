@@ -1,13 +1,15 @@
 package net.projects.MovieManagement.repository;
 
 import net.projects.MovieManagement.entity.Rating;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface RatingRepository extends JpaRepository<Rating, Long> {
 
-    List<Rating> findByMovieId(Long id);
+    Page<Rating> findByMovieId(Long id, Pageable pageable);
 
-    List<Rating> findByUserUsername(String username);
+    Page<Rating> findByUserUsername(String username,Pageable pageable);
 }

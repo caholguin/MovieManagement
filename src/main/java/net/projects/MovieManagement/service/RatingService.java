@@ -1,23 +1,27 @@
 package net.projects.MovieManagement.service;
 
+import net.projects.MovieManagement.dto.request.SaveRatingDTO;
+import net.projects.MovieManagement.dto.response.GetRatingDTO;
 import net.projects.MovieManagement.entity.Rating;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface RatingService {
 
-    List<Rating> getAll();
+    Page<GetRatingDTO> findAll(Pageable pageable);
 
-    List<Rating> findAllByMovieId(Long movieId);
+    Page<GetRatingDTO> findAllByMovieId(Long movieId, Pageable pageable);
 
-    List<Rating> findAllByUsername(String username);
+    Page<GetRatingDTO> findAllByUsername(String username, Pageable pageable);
 
-    Rating getById(Long id);
+    GetRatingDTO findById(Long id);
 
-    Rating createOne(Rating rating);
+    GetRatingDTO create(SaveRatingDTO saveRatingDTO);
 
-    Rating updateOneById(Long id,Rating rating);
+    GetRatingDTO update(Long id, SaveRatingDTO saveRatingDTO);
 
-    void deleteOneById(Long id);
+    void delete(Long id);
 
 }

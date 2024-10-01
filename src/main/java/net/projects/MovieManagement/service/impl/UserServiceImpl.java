@@ -43,7 +43,8 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toDto(this.findOneByUsernameEntity(username));
     }
 
-    private User findOneByUsernameEntity(String username){
+    @Override
+    public User findOneByUsernameEntity(String username){
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectoNotFoundException("[user: " + username + "]"));
     }
