@@ -30,7 +30,8 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException.class,
             HttpRequestMethodNotSupportedException.class,
             HttpMediaTypeNotSupportedException.class,
-            HttpMessageNotReadableException.class
+            HttpMessageNotReadableException.class,
+            DuplicateRatingException.class
     })
     public ResponseEntity<ApiErrorDTO> handleAllException(Exception exception, HttpServletRequest request, HttpServletResponse response){
 
@@ -63,6 +64,10 @@ public class GlobalExceptionHandler {
 
         if (exception instanceof HttpMessageNotReadableException httpMessageNotReadableException) {
             return this.handleHttpMessageNotReadableException(httpMessageNotReadableException, request, response, timestamp);
+        }
+
+        if (exception instanceof DuplicateRatingException duplicateRatingException) {
+            return  this.handleDuplicateRatingException(duplicateRatingException, request, response, timestamp);
         }
 
         return this.handleException(exception, request, response, timestamp);
@@ -205,6 +210,23 @@ public class GlobalExceptionHandler {
         apiErrorDto.setHttpMethod(request.getMethod());
         apiErrorDto.setMessage("Oops! Error reading the HTTP message body. Make sure the request is correctly formatted and contains valid data." + httpMessageNotReadableException.getMessage());
         apiErrorDto.setBackendMessage(httpMessageNotReadableException.getMessage());
+        apiErrorDto.setTimestamp(timestamp);
+        apiErrorDto.setDetails(null);
+
+        return ResponseEntity.status(httpStatus).body(apiErrorDto);
+
+    }
+
+    private ResponseEntity<ApiErrorDTO> handleDuplicateRatingException(DuplicateRatingException duplicateRatingException, HttpServletRequest request, HttpServletResponse response, LocalDateTime timestamp){
+
+        int httpStatus = HttpStatus.CONFLICT.value();
+
+        ApiErrorDTO apiErrorDto = new ApiErrorDTO();
+        apiErrorDto.setHttpCode(httpStatus);
+        apiErrorDto.setUrl(request.getRequestURL().toString());
+        apiErrorDto.setHttpMethod(request.getMethod());
+        apiErrorDto.setMessage(duplicateRatingException.getMessage());
+        apiErrorDto.setBackendMessage(duplicateRatingException.getMessage());
         apiErrorDto.setTimestamp(timestamp);
         apiErrorDto.setDetails(null);
 

@@ -5,6 +5,7 @@ import net.projects.MovieManagement.dto.request.SaveRatingDTO;
 import net.projects.MovieManagement.dto.response.GetRatingDTO;
 import net.projects.MovieManagement.entity.Rating;
 import net.projects.MovieManagement.entity.User;
+import net.projects.MovieManagement.exception.DuplicateRatingException;
 import net.projects.MovieManagement.exception.ObjectoNotFoundException;
 import net.projects.MovieManagement.mapper.RatingMapper;
 import net.projects.MovieManagement.repository.RatingRepository;
@@ -55,6 +56,11 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public GetRatingDTO create(SaveRatingDTO saveRatingDTO){
+
+        boolean ratingExists = ratingRepository.existsByMovieIdAndUserUsername(saveRatingDTO.getMovieId(),saveRatingDTO.getUsername());
+        if (ratingExists) {
+            throw  new DuplicateRatingException(saveRatingDTO.getUsername(), saveRatingDTO.getMovieId());
+        }
 
         User user = userService.findOneByUsernameEntity(saveRatingDTO.getUsername());
 
