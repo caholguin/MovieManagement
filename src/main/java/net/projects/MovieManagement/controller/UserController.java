@@ -3,6 +3,8 @@ package net.projects.MovieManagement.controller;
 import jakarta.validation.Valid;
 import net.projects.MovieManagement.dto.request.SaveUserDTO;
 import net.projects.MovieManagement.dto.response.GetUserDTO;
+import net.projects.MovieManagement.dto.response.UserDetailDTO;
+import net.projects.MovieManagement.service.RatingService;
 import net.projects.MovieManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RatingService ratingService;
+
     @GetMapping
     public ResponseEntity<Page<GetUserDTO>> getAll(@RequestParam(required = false) String name, Pageable pageable){
 
@@ -28,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<GetUserDTO> findById(@PathVariable String username){
+    public ResponseEntity<UserDetailDTO> findById(@PathVariable String username){
         return new ResponseEntity<>(userService.findOneByUsername(username), HttpStatus.OK);
     }
 
@@ -51,5 +56,10 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable String username){
         userService.deleteOneByUsername(username);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{username}/ratings")
+    public ResponseEntity<Page<GetUserDTO.GetRatingDTO>> getRatingsByUsername(@PathVariable String username, Pageable pageable){
+        return new ResponseEntity<>(ratingService.findAllByUsername(username,pageable),HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package net.projects.MovieManagement.service;
 import net.projects.MovieManagement.dto.request.MovieSearchCriteriaDTO;
 import net.projects.MovieManagement.dto.request.SaveMovieDTO;
 import net.projects.MovieManagement.dto.response.GetMovieDTO;
+import net.projects.MovieManagement.dto.response.MovieDetailDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,7 +14,7 @@ public interface MovieService {
 
     Page<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria, Pageable pageable);
 
-    GetMovieDTO findOneById(Long id);
+    MovieDetailDTO findOneById(Long id);
 
     GetMovieDTO createOne(SaveMovieDTO saveMovieDTO);
 

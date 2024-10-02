@@ -4,9 +4,11 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import net.projects.MovieManagement.dto.request.SaveUserDTO;
 import net.projects.MovieManagement.dto.response.GetUserDTO;
+import net.projects.MovieManagement.dto.response.UserDetailDTO;
 import net.projects.MovieManagement.entity.User;
 import net.projects.MovieManagement.exception.ObjectoNotFoundException;
 import net.projects.MovieManagement.mapper.UserMapper;
+import net.projects.MovieManagement.repository.RatingRepository;
 import net.projects.MovieManagement.repository.UserRepository;
 import net.projects.MovieManagement.service.UserService;
 import net.projects.MovieManagement.service.validator.PasswordValidator;
@@ -22,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RatingRepository ratingRespository;
 
     @Override
     public Page<GetUserDTO> findAll(String name, Pageable pageable){
@@ -39,8 +44,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserDTO findOneByUsername(String username){
-        return UserMapper.toDto(this.findOneByUsernameEntity(username));
+    public UserDetailDTO findOneByUsername(String username){
+
+        int totalRatings = ratingRespository.countByUserUsername(username);
+        double averageRatings = ratingRespository.avgRatingByUsername(username);
+        int lowestRating = ratingRespository.minRatingByUsername(username);
+        int highestRating = ratingRespository.maxRatingByUsername(username);
+
+        return UserMapper.toDetailDto(this.findOneByUsernameEntity(username),totalRatings,averageRatings,lowestRating,highestRating);
     }
 
     @Override

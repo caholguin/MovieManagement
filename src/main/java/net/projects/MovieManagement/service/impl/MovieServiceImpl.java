@@ -3,10 +3,12 @@ package net.projects.MovieManagement.service.impl;
 import net.projects.MovieManagement.dto.request.MovieSearchCriteriaDTO;
 import net.projects.MovieManagement.dto.request.SaveMovieDTO;
 import net.projects.MovieManagement.dto.response.GetMovieDTO;
+import net.projects.MovieManagement.dto.response.MovieDetailDTO;
 import net.projects.MovieManagement.entity.Movie;
 import net.projects.MovieManagement.exception.ObjectoNotFoundException;
 import net.projects.MovieManagement.mapper.MovieMapper;
 import net.projects.MovieManagement.repository.MovieRespository;
+import net.projects.MovieManagement.repository.RatingRepository;
 import net.projects.MovieManagement.repository.specification.FindAllMovieEspecification;
 import net.projects.MovieManagement.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +16,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-
-import java.util.List;
-
 @Service
 public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private MovieRespository movieRespository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     @Override
     public Page<GetMovieDTO> findAll(MovieSearchCriteriaDTO searchCriteria, Pageable pageable){
@@ -43,8 +45,14 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public GetMovieDTO findOneById(Long id){
-        return MovieMapper.toDto(this.findOneByIdEntity(id));
+    public MovieDetailDTO findOneById(Long id){
+
+        int totalRatings = ratingRepository.countByMovieId(id);
+        double averageRating = ratingRepository.avgRatingByMovieId(id);
+        int lowestRating = ratingRepository.minRatingMovieId(id);
+        int highestRating = ratingRepository.maxRatingByMovieId(id);
+
+        return MovieMapper.toDetailDto(this.findOneByIdEntity(id),totalRatings,averageRating,lowestRating,highestRating);
     }
 
     private Movie findOneByIdEntity(Long id){

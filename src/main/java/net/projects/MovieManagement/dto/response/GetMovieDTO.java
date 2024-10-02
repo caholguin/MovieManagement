@@ -15,7 +15,7 @@ public class GetMovieDTO implements Serializable {
     private MovieGenre genre;
     @JsonProperty(value="release_year")
     int releaseYear;
-    private List<GetRatingDTO> ratings;
+    int totalRatings;
 
     public Long getId(){
         return id;
@@ -57,14 +57,13 @@ public class GetMovieDTO implements Serializable {
         this.releaseYear = releaseYear;
     }
 
-    public List<GetRatingDTO> getRatings(){
-        return ratings;
+    public int getTotalRatings(){
+        return totalRatings;
     }
 
-    public void setRatings(List<GetRatingDTO> ratings){
-        this.ratings = ratings;
+    public void setTotalRatings(int totalRatings){
+        this.totalRatings = totalRatings;
     }
-
 
     public static class GetRatingDTO implements Serializable {
 

@@ -3,14 +3,13 @@ package net.projects.MovieManagement.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class GetUserDTO implements Serializable {
 
     private Long id;
     private String username;
     private String name;
-    List<GetRatingDTO> ratings;
+    private int totalRating;
 
     public Long getId(){
         return id;
@@ -36,12 +35,12 @@ public class GetUserDTO implements Serializable {
         this.name = name;
     }
 
-    public List<GetRatingDTO> getRatings(){
-        return ratings;
+    public int getTotalRating(){
+        return totalRating;
     }
 
-    public void setRatings(List<GetRatingDTO> ratings){
-        this.ratings = ratings;
+    public void setTotalRating(int totalRating){
+        this.totalRating = totalRating;
     }
 
     public static class GetRatingDTO implements Serializable {
